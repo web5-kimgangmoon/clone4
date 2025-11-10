@@ -6,7 +6,7 @@
 
 # 스택
 
-next, framer-motion, embla Carousel, react, tailwind, github, @heroicons/react, headless ui, clsx
+next, framer-motion, embla Carousel, react, tailwind, github, @heroicons/react, headless ui, clsx, pretendard
 
 # 기타
 
@@ -21,3 +21,5 @@ next, framer-motion, embla Carousel, react, tailwind, github, @heroicons/react, 
 1. 노션 메인 페이지의 ui 코딩.
 
 ### 11/10
+
+1. header 작업중, navigation popover 버튼과 패널을 headlessui와 framer-motion을 조합하여 완성했습니다. 내부 ui 작성이 필요합니다.

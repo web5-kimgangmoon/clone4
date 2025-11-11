@@ -23,3 +23,7 @@ next, framer-motion, embla Carousel, react, tailwind, github, @heroicons/react, 
 ### 11/10
 
 1. header 작업중, navigation popover 버튼과 패널을 headlessui와 framer-motion을 조합하여 완성했습니다. 내부 ui 작성이 필요합니다.
+
+### 11/11
+
+1. header 작업중. 두 popover의 상호작용에서 막혔습니다.

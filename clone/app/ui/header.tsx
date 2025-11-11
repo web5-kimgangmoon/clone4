@@ -1,21 +1,46 @@
 import Link from "next/link";
 import { Logo } from "../svgStore/logo";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/16/solid";
-import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
+import {
+  Popover,
+  PopoverButton,
+  PopoverGroup,
+  PopoverPanel,
+} from "@headlessui/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import clsx from "clsx";
 
 export const Header = () => {
   return (
-    <nav className="relative z-11 bg-white px-6.5 pt-5.5 flex justify-between">
+    <header className="relative z-11 bg-white px-6.5 pt-5.5 flex justify-between">
       <Link href={"/"}>
         <Logo />
       </Link>
-      <ul className="flex gap-1 text-[0.85rem] font-[--font-sansation] font-[500]">
-        <PopoverLi title="Notion">
+      <Nav />
+      <div></div>
+    </header>
+  );
+};
+
+const Nav = () => {
+  const [openNotionPop, setOpenNotionPop] = useState<boolean>(false);
+  const [openStartPop, setOpenStartPop] = useState<boolean>(false);
+  return (
+    <nav>
+      <PopoverGroup
+        className={
+          "flex gap-1 text-[0.85rem] font-[--font-sansation] font-[500]"
+        }
+      >
+        <PopoverWrapper
+          title="Notion"
+          hoverLock={openStartPop}
+          openFn={() => setOpenNotionPop(true)}
+          closeFn={() => setOpenNotionPop(false)}
+        >
           <NotionComp />
-        </PopoverLi>
+        </PopoverWrapper>
         {[
           ["메일", "/"],
           ["캘린더", "/"],
@@ -23,51 +48,56 @@ export const Header = () => {
           ["대기업", "/"],
           ["가격", "/"],
         ].map((v, idx) => (
-          <LinkLi key={idx} href={v[1]}>
+          <LinkItem key={idx} href={v[1]}>
             {v[0]}
-          </LinkLi>
+          </LinkItem>
         ))}
-        <PopoverLi title="둘러보기">
+        <PopoverWrapper
+          hoverLock={openNotionPop}
+          openFn={() => setOpenStartPop(true)}
+          closeFn={() => setOpenStartPop(false)}
+          title="둘러보기"
+        >
           <div></div>
-        </PopoverLi>
-        <LinkLi href="/">영업팀 문의하기</LinkLi>
-      </ul>
-      <div></div>
+        </PopoverWrapper>
+        <LinkItem href="/">영업팀 문의하기</LinkItem>
+      </PopoverGroup>
     </nav>
   );
 };
 
-const Li = ({ children }: { children: React.ReactNode }) => {
+// bg-white hover:bg-neutral-100 rounded-md transition-colors duration-200
+const LinkItem = ({ children, href }: { children: string; href: string }) => {
   return (
-    <li className="bg-white hover:bg-neutral-100 rounded-md transition-colors duration-200">
+    <Link
+      className="flex items-center px-3 py-1 bg-white hover:bg-neutral-100 rounded-md transition-colors duration-200"
+      href={href}
+    >
       {children}
-    </li>
+    </Link>
   );
 };
 
-const LinkLi = ({ children, href }: { children: string; href: string }) => {
-  return (
-    <Li>
-      <Link className="flex items-center px-3 py-1" href={href}>
-        {children}
-      </Link>
-    </Li>
-  );
-};
-
-const PopoverLi = ({
+const PopoverWrapper = ({
   title,
   children,
+  hoverLock,
+  openFn,
+  closeFn,
 }: {
   title: string;
+  hoverLock: boolean;
+  openFn: () => void;
+  closeFn: () => void;
   children: React.ReactNode;
 }) => {
   const [isHoverBtn, setIsHoverBtn] = useState<boolean>(false);
   const [isHoverPannel, setIsHoverPannel] = useState<boolean>(false);
+
   return (
-    <Li>
-      <Popover>
-        {({ open }) => (
+    <Popover>
+      {({ open }) => {
+        return (
           <>
             <PopoverButton
               className={clsx(
@@ -82,14 +112,32 @@ const PopoverLi = ({
               onHoverEnd={() => setIsHoverBtn(false)}
             >
               {title}
-              <ChevronDownIcon className="w-4 h-4 group-hover:hidden" />
-              <ChevronUpIcon className="w-4 h-4 hidden group-hover:block " />
+              <ChevronDownIcon
+                className={clsx(
+                  "w-4 h-4",
+                  open || ((isHoverBtn || isHoverPannel) && !hoverLock)
+                    ? "hidden"
+                    : "block"
+                )}
+              />
+              <ChevronUpIcon
+                className={clsx(
+                  "w-4 h-4",
+                  open || ((isHoverBtn || isHoverPannel) && !hoverLock)
+                    ? "block"
+                    : "hidden"
+                )}
+              />
             </PopoverButton>
             <AnimatePresence>
-              {(open || isHoverBtn || isHoverPannel) && (
+              {(open || ((isHoverBtn || isHoverPannel) && !hoverLock)) && (
                 <PopoverPanel
+                  modal={false}
                   static
-                  className={"w-full h-max bg-white z-10 py-6 px-24"}
+                  className={clsx(
+                    "w-full h-max bg-white py-6 px-24",
+                    open ? "z-11" : "z-10"
+                  )}
                   anchor={{ to: "bottom" }}
                   as={motion.div}
                   onHoverStart={() => setIsHoverPannel(true)}
@@ -103,9 +151,9 @@ const PopoverLi = ({
               )}
             </AnimatePresence>
           </>
-        )}
-      </Popover>
-    </Li>
+        );
+      }}
+    </Popover>
   );
 };
 
@@ -132,7 +180,7 @@ const NotionComp = () => {
     ["Web Clipper 다운로드", "웹에서 가져와 Notion에 저장하세요.", "/"],
   ];
   return (
-    <section className="flex">
+    <section className="flex gap-8">
       <nav className="font-[--font-pretendard] grow-2">
         <h2 className="text-[0.9rem] text-neutral-500 p-2">기능</h2>
         <ul className="pt-2 grid grid-rows-4 grid-cols-2">
@@ -158,10 +206,32 @@ const NotionComp = () => {
           ))}
         </ul>
       </nav>
-      <nav className="grow-1">
-        <h2>시작하기</h2>
+      <nav className="font-[--font-pretendard] grow-1">
+        <h2 className="text-[0.9rem] text-neutral-500 p-2">시작하기</h2>
+        <ul className="pt-2 grid grid-rows-4 grid-cols-1">
+          {startList.map((v, idx) => (
+            <li key={idx}>
+              <Link
+                href={v[2]}
+                className="block group p-2 bg-white hover:bg-neutral-100 rounded-xl"
+              >
+                <h4 className="flex gap-2 items-center">
+                  <span className="text-[1rem] font-semibold leading-7 text-neutral-600 ">
+                    {v[0]}
+                  </span>
+                  {v[3] && (
+                    <strong className="w-max text-[0.75rem] font-semibold bg-sky-100 text-blue-600 rounded-xl px-1.25 py-0">
+                      New
+                    </strong>
+                  )}
+                </h4>
+                <p className="text-[0.8rem] text-neutral-500">{v[1]}</p>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </nav>
-      <div className="grow-1"></div>
+      <div className="grow-1 bg-neutral-100 rounded-xl"></div>
     </section>
   );
 };

@@ -27,3 +27,7 @@ next, framer-motion, embla Carousel, react, tailwind, github, @heroicons/react, 
 ### 11/11
 
 1. header 작업중. 두 popover의 상호작용에서 막혔습니다.
+
+### 11/12
+
+1. header 작업중, 두 popover의 상호작용 성공.(custom ui)

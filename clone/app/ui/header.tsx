@@ -8,8 +8,9 @@ import {
   PopoverPanel,
 } from "@headlessui/react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
+import Image from "next/image";
 
 export const Header = () => {
   return (
@@ -26,6 +27,17 @@ export const Header = () => {
 const Nav = () => {
   const [openNotionPop, setOpenNotionPop] = useState<boolean>(false);
   const [openStartPop, setOpenStartPop] = useState<boolean>(false);
+
+  useEffect(() => {
+    const closePopover = (e: MouseEvent) => {
+      setOpenNotionPop(false);
+      setOpenStartPop(false);
+    };
+    document.addEventListener("click", closePopover);
+    return () => {
+      document.removeEventListener("click", closePopover);
+    };
+  }, []);
   return (
     <nav>
       <PopoverGroup
@@ -36,8 +48,12 @@ const Nav = () => {
         <PopoverWrapper
           title="Notion"
           hoverLock={openStartPop}
-          openFn={() => setOpenNotionPop(true)}
+          openFn={() => {
+            setOpenNotionPop(true);
+            setOpenStartPop(false);
+          }}
           closeFn={() => setOpenNotionPop(false)}
+          open={openNotionPop}
         >
           <NotionComp />
         </PopoverWrapper>
@@ -53,10 +69,14 @@ const Nav = () => {
           </LinkItem>
         ))}
         <PopoverWrapper
-          hoverLock={openNotionPop}
-          openFn={() => setOpenStartPop(true)}
-          closeFn={() => setOpenStartPop(false)}
           title="둘러보기"
+          hoverLock={openNotionPop}
+          openFn={() => {
+            setOpenStartPop(true);
+            setOpenNotionPop(false);
+          }}
+          closeFn={() => setOpenStartPop(false)}
+          open={openStartPop}
         >
           <div></div>
         </PopoverWrapper>
@@ -84,75 +104,103 @@ const PopoverWrapper = ({
   hoverLock,
   openFn,
   closeFn,
+  open,
 }: {
   title: string;
   hoverLock: boolean;
   openFn: () => void;
   closeFn: () => void;
   children: React.ReactNode;
+  open: boolean;
 }) => {
   const [isHoverBtn, setIsHoverBtn] = useState<boolean>(false);
   const [isHoverPannel, setIsHoverPannel] = useState<boolean>(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const btnRef = useRef<null | HTMLButtonElement>(null);
+  const panelRef = useRef<null | HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (btnRef.current !== null) {
+      const clickEvent = (e: MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        open ? closeFn() : openFn();
+      };
+      btnRef.current.addEventListener("click", clickEvent);
+      return () => btnRef.current?.removeEventListener("click", clickEvent);
+    }
+  }, [btnRef.current, open]);
+  useEffect(() => {
+    if (panelRef.current !== null) {
+      const clickEvent = (e: MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+      };
+      panelRef.current.addEventListener("click", clickEvent);
+      return () => panelRef.current?.removeEventListener("click", clickEvent);
+    }
+  }, [panelRef.current]);
 
   return (
     <Popover>
-      {({ open }) => {
-        return (
-          <>
-            <PopoverButton
-              className={clsx(
-                "group px-2 py-1 flex items-center gap-2 outline-none transition-colors cursor-pointer duration-200",
-                {
-                  "bg-neutral-100 rounded-xl":
-                    isHoverBtn || isHoverPannel || open,
-                }
-              )}
-              as={motion.button}
-              onHoverStart={() => setIsHoverBtn(true)}
-              onHoverEnd={() => setIsHoverBtn(false)}
-            >
-              {title}
-              <ChevronDownIcon
-                className={clsx(
-                  "w-4 h-4",
-                  open || ((isHoverBtn || isHoverPannel) && !hoverLock)
-                    ? "hidden"
-                    : "block"
-                )}
-              />
-              <ChevronUpIcon
-                className={clsx(
-                  "w-4 h-4",
-                  open || ((isHoverBtn || isHoverPannel) && !hoverLock)
-                    ? "block"
-                    : "hidden"
-                )}
-              />
-            </PopoverButton>
-            <AnimatePresence>
-              {(open || ((isHoverBtn || isHoverPannel) && !hoverLock)) && (
-                <PopoverPanel
-                  modal={false}
-                  static
-                  className={clsx(
-                    "w-full h-max bg-white py-6 px-24",
-                    open ? "z-11" : "z-10"
-                  )}
-                  anchor={{ to: "bottom" }}
-                  as={motion.div}
-                  onHoverStart={() => setIsHoverPannel(true)}
-                  onHoverEnd={() => setIsHoverPannel(false)}
-                  initial={{ opacity: 0, translateY: -10 }}
-                  animate={{ opacity: 1, translateY: 0 }}
-                  exit={{ opacity: 0, translateY: -10 }}
-                >
-                  {children}
-                </PopoverPanel>
-              )}
-            </AnimatePresence>
-          </>
-        );
-      }}
+      <PopoverButton
+        className={clsx(
+          "group px-2 py-1 flex items-center gap-2 outline-none transition-colors cursor-pointer duration-200 rounded-xl",
+          {
+            "bg-neutral-100": isHoverBtn || isHoverPannel || open,
+          }
+        )}
+        as={motion.button}
+        onHoverStart={() => setIsHoverBtn(true)}
+        onHoverEnd={() => setIsHoverBtn(false)}
+        ref={btnRef}
+      >
+        {title}
+        <ChevronDownIcon
+          className={clsx(
+            "w-4 h-4",
+            open || ((isHoverBtn || isHoverPannel) && !hoverLock)
+              ? "hidden"
+              : "block"
+          )}
+        />
+        <ChevronUpIcon
+          className={clsx(
+            "w-4 h-4",
+            open || ((isHoverBtn || isHoverPannel) && !hoverLock)
+              ? "block"
+              : "hidden"
+          )}
+        />
+      </PopoverButton>
+      <AnimatePresence>
+        {(open || ((isHoverBtn || isHoverPannel) && !hoverLock)) && (
+          <PopoverPanel
+            static
+            className={clsx("w-full h-max bg-white py-6 px-24")}
+            anchor={{ to: "bottom" }}
+            as={motion.div}
+            onHoverStart={(e) => {
+              isAnimating || setIsHoverPannel(true);
+            }}
+            onHoverEnd={() => setIsHoverPannel(false)}
+            initial={{ opacity: 0, translateY: -10 }}
+            animate={{ opacity: 1, translateY: 0 }}
+            exit={{ opacity: 0, translateY: -10 }}
+            ref={panelRef}
+            style={{ boxShadow: "0px 0px 5px 2px rgba(0,0,0,0.1)" }}
+            onAnimationStart={() => {
+              !(isHoverBtn || isHoverPannel) && setIsAnimating(true);
+            }}
+            onAnimationEnd={() => {
+              setIsAnimating(false);
+            }}
+          >
+            {children}
+          </PopoverPanel>
+        )}
+      </AnimatePresence>
     </Popover>
   );
 };
@@ -180,8 +228,8 @@ const NotionComp = () => {
     ["Web Clipper 다운로드", "웹에서 가져와 Notion에 저장하세요.", "/"],
   ];
   return (
-    <section className="flex gap-8">
-      <nav className="font-[--font-pretendard] grow-2">
+    <section className="w-full flex">
+      <nav className="font-[--font-pretendard] flex-1/2 grow-0 shrink-0 pr-8">
         <h2 className="text-[0.9rem] text-neutral-500 p-2">기능</h2>
         <ul className="pt-2 grid grid-rows-4 grid-cols-2">
           {notionList.map((v, idx) => (
@@ -206,7 +254,7 @@ const NotionComp = () => {
           ))}
         </ul>
       </nav>
-      <nav className="font-[--font-pretendard] grow-1">
+      <nav className="font-[--font-pretendard] flex-1/4 grow-0 shrink-0 pr-8">
         <h2 className="text-[0.9rem] text-neutral-500 p-2">시작하기</h2>
         <ul className="pt-2 grid grid-rows-4 grid-cols-1">
           {startList.map((v, idx) => (
@@ -231,7 +279,26 @@ const NotionComp = () => {
           ))}
         </ul>
       </nav>
-      <div className="grow-1 bg-neutral-100 rounded-xl"></div>
+      <div className="flex-1/4 grow-0 shrink-0 rounded-xl font-[--font-sansation] font-semibold pr-32 text-neutral-600">
+        <div className="flex flex-col w-full h-full p-5 bg-neutral-100 rounded-xl">
+          <h4 className="pb-4">
+            더 빠른 경험을 위한 Notion 데스크톱 앱 다운로드
+          </h4>
+          <button className="w-max bg-sky-600 text-white py-1.5 px-5 rounded-lg mb-2">
+            앱 다운로드
+          </button>
+          <div className="py-3 px-4 grow-1">
+            <div className="relative w-full h-full">
+              <Image
+                src={"/startups_background.avif"}
+                alt={"startups_background.avif"}
+                fill
+                style={{ objectFit: "contain" }}
+              ></Image>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
   );
 };

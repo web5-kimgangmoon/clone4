@@ -15,11 +15,26 @@ import Image from "next/image";
 export const Header = () => {
   return (
     <header className="relative z-11 bg-white px-6.5 pt-5.5 flex justify-between">
-      <Link href={"/"}>
-        <Logo />
-      </Link>
+      <div className="grow-0 shrink-1 w-1/3">
+        <Link href={"/"}>
+          <Logo />
+        </Link>
+      </div>
       <Nav />
-      <div></div>
+      <div className="flex gap-4 grow-0 shrink-1 w-1/3 justify-end">
+        <Link
+          className="flex items-center px-3 py-1 bg-white hover:bg-neutral-100 rounded-md transition-colors duration-200 text-[0.85rem] font-[--font-sansation] font-[500]"
+          href={"/"}
+        >
+          로그인
+        </Link>
+        <Link
+          className="flex items-center px-4 py-2 text-white bg-blue-500 hover:bg-blue-500/90 rounded-md transition-colors duration-100 text-[0.85rem] font-[--font-sansation] font-[500]"
+          href={"/"}
+        >
+          Notion 무료로 사용하기
+        </Link>
+      </div>
     </header>
   );
 };
@@ -39,7 +54,7 @@ const Nav = () => {
     };
   }, []);
   return (
-    <nav>
+    <nav className="grow-0 shrink-0 min-w-1/3">
       <PopoverGroup
         className={
           "flex gap-1 text-[0.85rem] font-[--font-sansation] font-[500]"
@@ -78,7 +93,7 @@ const Nav = () => {
           closeFn={() => setOpenStartPop(false)}
           open={openStartPop}
         >
-          <div></div>
+          <StartComp />
         </PopoverWrapper>
         <LinkItem href="/">영업팀 문의하기</LinkItem>
       </PopoverGroup>
@@ -86,7 +101,6 @@ const Nav = () => {
   );
 };
 
-// bg-white hover:bg-neutral-100 rounded-md transition-colors duration-200
 const LinkItem = ({ children, href }: { children: string; href: string }) => {
   return (
     <Link
@@ -300,5 +314,108 @@ const NotionComp = () => {
         </div>
       </div>
     </section>
+  );
+};
+
+const StartComp = () => {
+  const data: { title: string; content: Array<[string, string]> }[] = [
+    {
+      title: "팀",
+      content: [
+        ["엔지니어링 및 제품", "/"],
+        ["디자인", "/"],
+        ["마케팅", "/"],
+        ["IT", "/"],
+      ],
+    },
+    {
+      title: "팀 규모",
+      content: [
+        ["스타트업", "/"],
+        ["중소기업", "/"],
+        ["대기업", "/"],
+        ["교육", "/"],
+      ],
+    },
+    {
+      title: "학습하기",
+      content: [
+        ["도움말 센터", "/"],
+        ["Notion 아카데미", "/"],
+        ["고객 스토리", "/"],
+        ["블로그", "/"],
+        ["커뮤니티", "/"],
+        ["파트너 프로그램", "/"],
+      ],
+    },
+    {
+      title: "만들기",
+      content: [
+        ["API", "/"],
+        ["템플릿", "/"],
+        ["보안", "/"],
+        ["파트너 찾기", "/"],
+      ],
+    },
+  ];
+  return (
+    <section className="w-full flex">
+      <LinkNavBigH {...data[0]} />
+      <LinkNavBigH {...data[1]} />
+      <LinkNavSmallH {...data[2]} />
+      <LinkNavSmallH {...data[3]} />
+    </section>
+  );
+};
+
+const LinkNavBigH = ({
+  title,
+  content,
+}: {
+  title: string;
+  content: Array<[string, string]>;
+}) => {
+  return (
+    <nav className="font-[--font-pretendard] grow-1 shrink-0 pr-8">
+      <h2 className="text-[0.9rem] text-neutral-500 p-2">{title}</h2>
+      <ul className="pt-2 grid grid-cols-1">
+        {content.map((v, idx) => (
+          <li key={idx}>
+            <Link
+              href={v[1]}
+              className="block group p-2 bg-white hover:bg-neutral-100 rounded-xl text-[1.4rem] font-semibold leading-7"
+            >
+              {v[0]}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+};
+
+const LinkNavSmallH = ({
+  title,
+  content,
+}: {
+  title: string;
+  content: Array<[string, string]>;
+}) => {
+  return (
+    <nav className="font-[--font-pretendard] grow-1 shrink-0 pr-8">
+      <h2 className="text-[0.9rem] text-neutral-500 p-2 pl-0.75">{title}</h2>
+      <ul className="pt-2 grid grid-cols-1">
+        {content.map((v, idx) => (
+          <li key={idx} className="h-max">
+            <Link
+              href={v[1]}
+              className="block group p-0.75 bg-white hover:bg-neutral-100 rounded-md text-[0.95rem] font-semibold"
+            >
+              {v[0]}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
 };

@@ -31,3 +31,9 @@ next, framer-motion, embla Carousel, react, tailwind, github, @heroicons/react, 
 ### 11/12
 
 1. header 작업중, 두 popover의 상호작용 성공.(custom ui)
+
+### 11/13
+
+1. 헤더 다른 popover 완성, 오른쪽 버튼 완성.
+2. nav가 중앙에 오도록, css 수정.
+3. header 완성.

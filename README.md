@@ -37,3 +37,7 @@ next, framer-motion, embla Carousel, react, tailwind, github, @heroicons/react, 
 1. 헤더 다른 popover 완성, 오른쪽 버튼 완성.
 2. nav가 중앙에 오도록, css 수정.
 3. header 완성.
+
+### 11/14
+
+1. body 헤더 완성.

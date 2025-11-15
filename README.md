@@ -41,3 +41,7 @@ next, framer-motion, embla Carousel, react, tailwind, github, @heroicons/react, 
 ### 11/14
 
 1. body 헤더 완성.
+
+### 11/15
+
+1. 쉬었습니다 죄송합니다.

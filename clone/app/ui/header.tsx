@@ -14,7 +14,7 @@ import Image from "next/image";
 
 export const Header = () => {
   return (
-    <header className="relative z-11 bg-white px-6.5 pt-5.5 flex justify-between">
+    <header className="relative z-11 bg-white px-6.5 pt-5.5 flex justify-between h-[50px]">
       <div className="grow-0 shrink-1 w-1/3">
         <Link href={"/"}>
           <Logo />

@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${pretendard.className} antialiased ${sansation.variable}`}
+        className={`relative ${pretendard.className} antialiased ${sansation.variable}`}
       >
         {children}
       </body>

@@ -46,6 +46,10 @@ next, framer-motion, embla Carousel, react, tailwind, github, @heroicons/react, 
 
 1. 쉬었습니다 죄송합니다.
 
-### 11/16
+### 11/17
 
 1. 감기 때문에 쉬었습니다. 죄송합니다.
+
+### 11/18
+
+1. 스크롤에 따른 동작 작업중.

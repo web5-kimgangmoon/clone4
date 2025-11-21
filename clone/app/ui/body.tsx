@@ -1,11 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import clsx from "clsx";
 
 export const Body = () => {
   return (
-    <main>
+    <main className="pt-[50px]">
       <Header />
       <div className="p-1 bg-black"></div>
     </main>
@@ -13,15 +14,24 @@ export const Body = () => {
 };
 
 const Header = () => {
-  const s = useScroll({});
+  const scroll = useScroll({});
+  const [isBottom, setIsBottom] = useState(false);
   const container = useRef<HTMLHeadElement | null>(null);
-  useMotionValueEvent(s.scrollY, "change", () => {
+  useMotionValueEvent(scroll.scrollY, "change", () => {
     if (
       container.current &&
-      window.innerHeight + s.scrollY.get() >=
+      !isBottom &&
+      window.innerHeight + scroll.scrollY.get() >=
         container.current?.clientHeight + 50
     )
-      console.log(window.innerHeight + s.scrollY.get());
+      setIsBottom(true);
+    else if (
+      container.current &&
+      isBottom &&
+      window.innerHeight + scroll.scrollY.get() <
+        container.current?.clientHeight + 50
+    )
+      setIsBottom(false);
   });
   return (
     <header className="w-full" ref={container}>
@@ -66,8 +76,14 @@ const Header = () => {
             }}
           ></Image>
         </div>
-        <motion.div className="sticky left-0 bottom-0 w-full bg-white">
-          <div className="container flex w-full gap-8 justify-between items-center max-w-[1200px] h-[76px]">
+        <div className={clsx("sticky left-0 bottom-0 w-full bg-white")}>
+          <div
+            className={clsx(
+              "container flex w-full gap-8 justify-between items-center max-w-[1200px] h-[76px] px-4 border-t",
+              isBottom ? "border-white" : "border-gray-300"
+            )}
+            style={{ boxSizing: "content-box" }}
+          >
             <h4 className="text-[0.9rem] text-gray-400">
               Notion을 믿고 쓰는 고객
             </h4>
@@ -184,7 +200,7 @@ const Header = () => {
               />
             </span>
           </div>
-        </motion.div>
+        </div>
       </div>
     </header>
   );

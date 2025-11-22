@@ -65,3 +65,7 @@ next, framer-motion, embla Carousel, react, tailwind, github, @heroicons/react, 
 ### 11/21
 
 1. 반응형 border 작성.
+
+### 11/22
+
+1. 감기로 쉬었습니다. 죄송합니다.

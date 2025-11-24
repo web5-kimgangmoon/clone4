@@ -8,7 +8,9 @@ export const Body = () => {
   return (
     <main className="pt-[50px]">
       <Header />
-      <div className="p-1 bg-black"></div>
+      <div className="p-1 bg-neutral-100">
+        <h2 className="cursor-default">Notion 3.0을 소개합니다.</h2>
+      </div>
     </main>
   );
 };

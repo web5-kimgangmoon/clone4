@@ -73,3 +73,7 @@ next, framer-motion, embla Carousel, react, tailwind, github, @heroicons/react, 
 ### 11/24
 
 1. body의 2번째 구획 작성중.
+
+### 11/22
+
+1. 쉬었습니다. 죄송합니다.

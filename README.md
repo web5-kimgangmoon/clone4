@@ -121,3 +121,7 @@ next, framer-motion, embla Carousel, react, tailwind, github, @heroicons/react, 
 ### 12/8
 
 1. 공무원 시험 공부 시작했습니다. 여유가 생기면, 일주일 후에 작업진행을 올리겠습니다.
+
+### 12/30
+
+1. 공무원 시험 공부중입니다. 일정을 어겼습니다. 죄송합니다. 여유가 생기면, 일주일 후에 작업진행을 올리겠습니다.

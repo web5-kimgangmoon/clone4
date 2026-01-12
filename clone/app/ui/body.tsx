@@ -3,14 +3,14 @@ import Link from "next/link";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { useRef, useState } from "react";
 import clsx from "clsx";
+import useEmblaCarousel from "embla-carousel-react";
+import { ArrowRightIcon } from "@heroicons/react/24/outline";
 
 export const Body = () => {
   return (
     <main className="pt-[50px]">
       <Header />
-      <div className="p-1 bg-neutral-100">
-        <h2 className="cursor-default">Notion 3.0을 소개합니다.</h2>
-      </div>
+      <ExampleSection />
     </main>
   );
 };
@@ -205,5 +205,98 @@ const Header = () => {
         </div>
       </div>
     </header>
+  );
+};
+
+const ExampleSection = () => {
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: true,
+    align: "center",
+    skipSnaps: false,
+    watchDrag: false,
+  });
+
+  const [isHoverLink, setIsHoverLink] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  return (
+    <section className="p-1 bg-neutral-100">
+      <div className="container max-w-[1200] pt-16">
+        <h2 className="cursor-default text-5xl font-extrabold pb-8">
+          Notion 3.0을 소개합니다.
+        </h2>
+        <div className="flex rounded-xl bg-white aspect-7/3">
+          <div className="flex flex-col w-1/3 grow-0 shrink-0 p-6 justify-between">
+            <motion.a
+              className=""
+              href={"/"}
+              onHoverStart={() => setIsHoverLink(true)}
+              onHoverEnd={() => setIsHoverLink(false)}
+            >
+              <h4 className="flex items-center pb-2">
+                맞춤 에이전트
+                <strong className="ml-2 w-max h-max text-[0.75rem] font-semibold bg-sky-100/60 text-blue-700 rounded-xl px-1.25 py-0 tracking-wider">
+                  New
+                </strong>
+              </h4>
+              <h5 className="text-[1.6rem] leading-8 font-bold break-keep pb-3">
+                작업을 배정하면, 에이전트가 작업을 수행합니다.
+              </h5>
+              <div
+                className={clsx(
+                  "w-8 rounded-full p-2",
+                  isHoverLink ? "bg-black/80" : "bg-black"
+                )}
+              >
+                <ArrowRightIcon color="white" />
+              </div>
+            </motion.a>
+            <div onClick={() => setOpen(true)}>
+              {[
+                [
+                  "단순·반복 업무 자동화",
+                  "며칠씩 걸리던 작업을 단 몇 분 만에. 목표만 알려주면 놀라운 결과를 눈으로 확인할 수 있습니다.",
+                ],
+                [
+                  "팀원들과 함께하는 AI",
+                  "우리 팀을 전담하는 든든한 전문가가 생긴 셈이죠.",
+                ],
+                [
+                  "내가 아는 정보를 공유합니다",
+                  "페이지와 메시지, 파일, 웹을 모두 검색해 정확한 답을 바로 찾아줍니다.",
+                ],
+                [
+                  "사용자 맞춤형",
+                  "나의 업무 스타일을 학습하는 에이전트. 행동부터 디자인까지 사용자가 직접 설정할 수 있습니다.",
+                ],
+              ].map((v, idx) => (
+                <button
+                  key={idx}
+                  className="text-left break-keep py-3 bg-white"
+                >
+                  <h4 className="font-semibold">{v[0]}</h4>
+                  <motion.p
+                    className="text-gray-500 overflow-hidden"
+                    initial={{ height: 0 }}
+                    animate={open && { height: "auto" }}
+                    exit={{ height: 0 }}
+                  >
+                    {v[1]}
+                  </motion.p>
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="w-2/3 grow-0 shrink-0 overflow-hidden" ref={emblaRef}>
+            <div className="flex">
+              <div className="w-full grow-0 shrink-0">1</div>
+              <div className="w-full grow-0 shrink-0">2</div>
+              <div className="w-full grow-0 shrink-0">3</div>
+              <div className="w-full grow-0 shrink-0">4</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 };

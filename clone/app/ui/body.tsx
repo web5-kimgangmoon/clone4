@@ -1,10 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState, Fragment } from "react";
 import clsx from "clsx";
 import useEmblaCarousel from "embla-carousel-react";
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowRightIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from "@heroicons/react/24/outline";
 
 export const Body = () => {
   return (
@@ -209,15 +213,7 @@ const Header = () => {
 };
 
 const ExampleSection = () => {
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: true,
-    align: "center",
-    skipSnaps: false,
-    watchDrag: false,
-  });
-
-  const [isHoverLink, setIsHoverLink] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [slideIdx, setSlideIdx] = useState(0);
 
   return (
     <section className="p-1 bg-neutral-100">
@@ -225,33 +221,29 @@ const ExampleSection = () => {
         <h2 className="cursor-default text-5xl font-extrabold pb-8">
           Notion 3.0을 소개합니다.
         </h2>
-        <div className="flex rounded-xl bg-white aspect-7/3">
-          <div className="flex flex-col w-1/3 grow-0 shrink-0 p-6 justify-between">
-            <motion.a
-              className=""
-              href={"/"}
-              onHoverStart={() => setIsHoverLink(true)}
-              onHoverEnd={() => setIsHoverLink(false)}
-            >
-              <h4 className="flex items-center pb-2">
-                맞춤 에이전트
-                <strong className="ml-2 w-max h-max text-[0.75rem] font-semibold bg-sky-100/60 text-blue-700 rounded-xl px-1.25 py-0 tracking-wider">
-                  New
-                </strong>
-              </h4>
-              <h5 className="text-[1.6rem] leading-8 font-bold break-keep pb-3">
-                작업을 배정하면, 에이전트가 작업을 수행합니다.
-              </h5>
-              <div
-                className={clsx(
-                  "w-8 rounded-full p-2",
-                  isHoverLink ? "bg-black/80" : "bg-black"
-                )}
-              >
-                <ArrowRightIcon color="white" />
-              </div>
-            </motion.a>
-            <div onClick={() => setOpen(true)}>
+        <div className="flex rounded-xl bg-white aspect-7/3 hover:shadow-md transition duration-300">
+          <div className="flex flex-col w-1/3 grow-0 shrink-0 justify-between">
+            <div className="p-6">
+              <a className="group" href={"/"}>
+                <h4 className="flex items-center pb-2">
+                  맞춤 에이전트
+                  <strong className="ml-2 w-max h-max text-[0.75rem] font-semibold bg-sky-100/60 text-blue-700 rounded-xl px-1.25 py-0 tracking-wider">
+                    New
+                  </strong>
+                </h4>
+                <h5 className="text-[1.6rem] leading-8 font-bold break-keep pb-3">
+                  작업을 배정하면, 에이전트가 작업을 수행합니다.
+                </h5>
+                <div
+                  className={clsx(
+                    "w-8 rounded-full p-2 group-hover:bg-black/80 bg-black"
+                  )}
+                >
+                  <ArrowRightIcon color="white" />
+                </div>
+              </a>
+            </div>
+            <div className="p-3">
               {[
                 [
                   "단순·반복 업무 자동화",
@@ -270,29 +262,113 @@ const ExampleSection = () => {
                   "나의 업무 스타일을 학습하는 에이전트. 행동부터 디자인까지 사용자가 직접 설정할 수 있습니다.",
                 ],
               ].map((v, idx) => (
-                <button
-                  key={idx}
-                  className="text-left break-keep py-3 bg-white"
-                >
-                  <h4 className="font-semibold">{v[0]}</h4>
-                  <motion.p
-                    className="text-gray-500 overflow-hidden"
-                    initial={{ height: 0 }}
-                    animate={open && { height: "auto" }}
-                    exit={{ height: 0 }}
+                <Fragment key={idx}>
+                  <button
+                    className={clsx(
+                      "w-full text-left break-keep p-3 bg-white transition-colors cursor-default rounded-md",
+                      slideIdx !== idx && "hover:bg-neutral-200 cursor-pointer"
+                    )}
+                    onClick={() => {
+                      setSlideIdx(idx);
+                    }}
                   >
-                    {v[1]}
-                  </motion.p>
-                </button>
+                    <h4 className="font-semibold">{v[0]}</h4>
+                    <motion.p
+                      className="text-gray-500 overflow-hidden"
+                      initial={{ height: 0 }}
+                      animate={
+                        slideIdx === idx ? { height: "auto" } : { height: 0 }
+                      }
+                      exit={{ height: 0 }}
+                    >
+                      {v[1]}
+                    </motion.p>
+                  </button>
+                  {idx !== 3 && (
+                    <hr className="mx-3 border-t-1 border-neutral-200" />
+                  )}
+                </Fragment>
               ))}
             </div>
           </div>
-          <div className="w-2/3 grow-0 shrink-0 overflow-hidden" ref={emblaRef}>
-            <div className="flex">
-              <div className="w-full grow-0 shrink-0">1</div>
-              <div className="w-full grow-0 shrink-0">2</div>
-              <div className="w-full grow-0 shrink-0">3</div>
-              <div className="w-full grow-0 shrink-0">4</div>
+          <div className="w-2/3 h-full grow-0 shrink-0 overflow-hidden">
+            <div className="flex h-full bg-[url('../public/accordion-background.avif')] relative">
+              <div className="absolute top-0 left-0 w-full h-full">
+                <button
+                  className={clsx(
+                    "group absolute top-0 left-0 w-1/2 h-full z-10 cursor-pointer",
+                    slideIdx === 0 && "hidden"
+                  )}
+                  onClick={() => {
+                    setSlideIdx(slideIdx - 1);
+                  }}
+                >
+                  <span className="hidden group-hover:flex justify-center items-center w-8 aspect-square rounded-full shadow-btn ml-9 bg-white">
+                    <ChevronLeftIcon className="w-5" strokeWidth={3} />
+                  </span>
+                </button>
+                <button
+                  className={clsx(
+                    "group absolute top-0 right-0 flex justify-end items-center w-1/2 h-full z-10 cursor-pointer",
+                    slideIdx === 3 && "hidden"
+                  )}
+                  onClick={() => {
+                    setSlideIdx(slideIdx + 1);
+                  }}
+                >
+                  <span className="hidden group-hover:flex justify-center items-center w-8 aspect-square rounded-full shadow-btn mr-3 grow-0 shrink-0 bg-white border border-neutral-200">
+                    <ChevronRightIcon className="w-5" strokeWidth={3} />
+                  </span>
+                </button>
+              </div>
+              {[
+                [
+                  "slide_A_1584x1080_isolated_Final_KR_Compressed_500k.mp4",
+                  1584 / 1080,
+                  "Slide_A_1584x1080_Isolated_Final_KR_Compressed_500k.avif",
+                ],
+                [
+                  "slide_B_1584x1080_isolated_Final_KR_Compressed_1100k.mp4",
+                  1584 / 1080,
+                  "Slide_B_1584x1080_Isolated_Final_KR_Compressed_1100k.avif",
+                ],
+                [
+                  "slide_C_1584x1080_isolated_Final_KR_Compressed_1100k.mp4",
+                  1584 / 1080,
+                  "Slide_C_1584x1080_Isolated_Final_KR_Compressed_1100k.avif",
+                ],
+                [
+                  "slide_D_1584x1080_isolated_Final_KR_Compressed_500k.mp4",
+                  1584 / 1080,
+                  "Slide_D_1584x1080_Isolated_Final_KR_Compressed_500k.avif",
+                ],
+              ].map((v, idx) => (
+                <div
+                  className={"w-full grow-0 shrink-0 pl-6 pt-6"}
+                  key={idx}
+                  hidden={slideIdx !== idx}
+                >
+                  <figure className="flex flex-col justify-between items-center m-0">
+                    <div className="inline-block w-full rounded-lg overflow-hidden">
+                      <video
+                        className=""
+                        src={v[0] as string}
+                        style={{
+                          aspectRatio: v[1],
+                          borderStartStartRadius: "0.75rem",
+                        }}
+                        loop
+                        autoPlay
+                        muted
+                        playsInline
+                        poster={v[2] as string}
+                        width={1584}
+                        height={1080}
+                      ></video>
+                    </div>
+                  </figure>
+                </div>
+              ))}
             </div>
           </div>
         </div>

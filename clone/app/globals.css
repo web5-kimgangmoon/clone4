@@ -16,6 +16,10 @@
   margin-inline: auto;
 }
 
+@theme {
+  --shadow-btn: 0px 0px 10px -7px black;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;

@@ -130,3 +130,7 @@ next, framer-motion, embla Carousel, react, tailwind, github, @heroicons/react, 
 
 1. 웹페이지 코딩 다시 시작합니다. 세부적인 요소를 포기하더라도 빨리 완성시키는걸 목적으로 하겠습니다.
 2. 예시 section 작성중, 슬라이드와 같이 제어되는 disclosure를 작성중.
+
+### 1/13
+
+1. 슬라이드와 disclosure 상호작용 작성완료. 화면에 hover하면 재생되는 이미지만 추가해주면 다음 작업으로 넘어갈 수 있음.

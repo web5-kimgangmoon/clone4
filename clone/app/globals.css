@@ -18,6 +18,7 @@
 
 @theme {
   --shadow-btn: 0px 0px 10px -7px black;
+  --shadow-overlap: -4px 1px 10px -9px black;
 }
 
 @media (prefers-color-scheme: dark) {

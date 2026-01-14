@@ -134,3 +134,7 @@ next, framer-motion, embla Carousel, react, tailwind, github, @heroicons/react, 
 ### 1/13
 
 1. 슬라이드와 disclosure 상호작용 작성완료. 화면에 hover하면 재생되는 이미지만 추가해주면 다음 작업으로 넘어갈 수 있음.
+
+### 1/14
+
+1. 예시 section 작성중. slide와 disclosure이 연동되어 동작하던 부분은 코딩완료했습니다.

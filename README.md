@@ -138,3 +138,7 @@ next, framer-motion, embla Carousel, react, tailwind, github, @heroicons/react, 
 ### 1/14
 
 1. 예시 section 작성중. slide와 disclosure이 연동되어 동작하던 부분은 코딩완료했습니다.
+
+### 1/15
+
+1. 예시 section 작성완료. requestSection 작성중.

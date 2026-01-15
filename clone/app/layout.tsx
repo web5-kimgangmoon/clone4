@@ -1,12 +1,18 @@
 import type { Metadata } from "next";
 import localfont from "next/font/local";
-import { Sansation } from "next/font/google";
+import { Sansation, Gowun_Dodum } from "next/font/google";
 import "./globals.css";
 
 const sansation = Sansation({
   variable: "--font-sansation",
   subsets: ["latin"],
   weight: ["300", "400", "700"],
+});
+
+const gowunDodum = Gowun_Dodum({
+  variable: "--font-gowunDodum",
+  subsets: ["latin"],
+  weight: ["400"],
 });
 
 const pretendard = localfont({
@@ -29,7 +35,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`relative ${pretendard.className} antialiased ${sansation.variable}`}
+        className={`relative ${pretendard.className} antialiased ${sansation.variable} ${gowunDodum.variable}`}
       >
         {children}
       </body>

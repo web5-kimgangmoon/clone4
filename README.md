@@ -142,3 +142,7 @@ next, framer-motion, embla Carousel, react, tailwind, github, @heroicons/react, 
 ### 1/15
 
 1. 예시 section 작성완료. requestSection 작성중.
+
+### 1/16
+
+1. 하루 쉬었습니다. 죄송합니다.

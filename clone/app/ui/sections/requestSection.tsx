@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { useId } from "react";
 
 export const RequestSection = () => {
   return (
@@ -30,9 +29,9 @@ export const RequestSection = () => {
             ></Image>
           </div>
         </div>
-        <div className="p-6 hover:shadow-btn">
+        <div className="mt-6 p-6 hover:shadow-btn rounded-lg border border-neutral-200">
           <form>
-            <ul className="grid grid-cols-4 grid-rows-3">
+            <ul className="grid grid-cols-3 grid-rows-4">
               {[
                 { title: "AI 검색", intro: "US$35/사용자" },
                 { title: "AI 챗봇", intro: "US$20/사용자" },
@@ -50,6 +49,25 @@ export const RequestSection = () => {
                 <CheckItem name="" title={v.title} intro={v.intro} key={idx} />
               ))}
             </ul>
+            <div className="grid grid-cols-3 grid-rows-1 bg-neutral-100 font-bold mt-5 p-5 rounded-lg">
+              <div>
+                <h5 className="text-lg">팀 규모</h5>
+                <input
+                  type="number"
+                  className="w-3/5 h-[3.5rem] border border-neutral-300 bg-white rounded-md outline-none cursor-pointer hover:border-blue-600 transition-colors duration-200 text-[2.5rem] leading-11 px-2"
+                  min={1}
+                  defaultValue={10}
+                ></input>
+              </div>
+              <div>
+                <h5 className="text-lg pb-1">월간 절감액</h5>
+                <strong className="text-[2.5rem] leading-11">US$690</strong>
+              </div>
+              <div>
+                <h5 className="text-lg pb-1">연간 절감액</h5>
+                <strong className="text-[2.5rem] leading-11">US$8,280</strong>
+              </div>
+            </div>
           </form>
         </div>
       </div>
@@ -66,13 +84,14 @@ const CheckItem = ({
   title: string;
   intro: string;
 }) => {
-  const inputId = useId();
   return (
     <li className="flex">
-      <input type="checkbox" name={name} id={inputId}></input>
-      <label htmlFor={inputId}>
-        <h4>{title}</h4>
-        <p>{intro}</p>
+      <label className="w-full flex items-stretch gap-x-1 py-1 cursor-pointer">
+        <input className="peer" type="checkbox" name={name}></input>
+        <h4 className="flex items-end font-bold pl-1">{title}</h4>
+        <p className="peer-checked:flex items-end hidden text-xs group h-full text-neutral-400">
+          {intro}
+        </p>
       </label>
     </li>
   );

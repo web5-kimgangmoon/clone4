@@ -158,3 +158,7 @@ next, framer-motion, embla Carousel, react, tailwind, github, @heroicons/react, 
 ### 1/20
 
 1. requestSection 완료.
+
+### 1/21
+
+1. introductionSection 작성중.

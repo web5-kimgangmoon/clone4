@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 import clsx from "clsx";
 import { ExampleSection } from "./sections/exampleSection";
 import { RequestSection } from "./sections/requestSection";
+import { IntroductionSection } from "./sections/introductionSection";
 
 export const Body = () => {
   return (
@@ -12,6 +13,7 @@ export const Body = () => {
       <Header />
       <ExampleSection />
       <RequestSection />
+      <IntroductionSection />
     </main>
   );
 };

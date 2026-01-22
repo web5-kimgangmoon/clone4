@@ -162,3 +162,7 @@ next, framer-motion, embla Carousel, react, tailwind, github, @heroicons/react, 
 ### 1/21
 
 1. introductionSection 작성중.
+
+### 1/22
+
+1. 유튜브 모달 작성중.(모달이 열릴 경우, 유튜브가 켜지고, 닫히면 꺼지도록 youtube player api와 연계 시도중)

@@ -6,7 +6,7 @@
 
 # 스택
 
-next, framer-motion, embla Carousel, react, tailwind, github, @heroicons/react, headless ui, clsx, pretendard
+next, framer-motion, embla Carousel, react, tailwind, github, @heroicons/react, headless ui, clsx, pretendard, youtube-player
 
 # 기타
 
@@ -170,3 +170,7 @@ next, framer-motion, embla Carousel, react, tailwind, github, @heroicons/react, 
 ### 1/23
 
 1. 쉬었습니다. 죄송합니다.
+
+### 1/24
+
+1. 유튜브 라이브러리와 headlessui 충돌중인 것으로 보인다.

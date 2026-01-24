@@ -1,13 +1,43 @@
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { PlayIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
+import { promises } from "dns";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import YoutubePlayer from "youtube-player";
 
 export const IntroductionSection = () => {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const [player, setPlayer] = useState<
+    | (object & {
+        playVideo: () => void;
+        pauseVideo: () => void;
+        loadVideoByUrl: (url: string) => void;
+        getIframe: () => Promise<HTMLIFrameElement>;
+      })
+    | null
+  >(null);
+  const youtubeRef = useRef<HTMLIFrameElement | null>(null);
 
+  useEffect(() => {
+    if (window && youtubeRef.current != null) {
+      const playerC = YoutubePlayer(youtubeRef.current);
+      playerC.loadVideoByUrl("https://www.youtube.com/embed/HubmluaaFmc");
+      setPlayer(playerC);
+      playerC.getPlaylist().then((v) => console.log(v));
+      return () => {
+        playerC.destroy();
+      };
+    }
+  }, [youtubeRef.current]);
+  useEffect(() => {
+    if (player !== null) {
+      if (openDialog) player.playVideo();
+      else player.pauseVideo();
+      player.getIframe().then((v) => console.log(v));
+    }
+  }, [openDialog]);
   return (
     <section className="bg-neutral-100">
       <div className="container max-w-[1200] py-12">
@@ -47,7 +77,7 @@ export const IntroductionSection = () => {
             </div>
             <button
               className="relative group cursor-pointer rounded-lg overflow-hidden"
-              onClick={() => setOpenDialog(true)}
+              onClick={() => setOpenDialog((v) => !v)}
             >
               <Image
                 className="group-hover:opacity-80 transition-opacity duration-200"
@@ -102,7 +132,7 @@ export const IntroductionSection = () => {
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                       // referrerpolicy="strict-origin-when-cross-origin"
                       // allowfullscreen
-                      // ref={youtubeRef}
+                      ref={youtubeRef}
                     ></iframe>
                   </div>
                   <Link

@@ -2,17 +2,25 @@
 
 1. header의 popover을 구현하던 중, 두 popover간 상호작용을 할 방법을 찾아야했다. 내 지식으론 부족했고, 인터넷과 공식문서를 살펴보게 되었다.
 
+2. border-radius를 video요소를 배경으로 쓰고, 그 위에 absolute로 더해진 요소에 border-radius를 쓰는 순간 원인불명의 radius가 추가되었다.
+
+3. 원본 페이지를 살펴보니, youtube 모달창이 띄워지는 순간 유튜브가 재생되고 닫히면 멈추는 요소가 있었다.
+
 ## 경과
 
 1. 한 번은 부모 요소에서 상태를 설정한 후, 자식 요소에서 popover의 open을 받아 지정하는 방식을 시도해봤지만 객체지향원칙에도 어긋나고 실제 동작에서도 문제가 생겼다. github의 discuss에 따르면, 캡슐화 문제와 아예 동작과정에서 문제가 발생하기에 할 수 없다고 되어있었다.
 
-2. border-radius를 video요소를 배경으로 쓰고, 그 위에 absolute로 더해진 요소에 border-radius를 쓰는 순간 원인불명의 radius가 추가되었다.
+2. 원인을 찾아보다가, 클론코딩 중인 내 페이지에서 video 배경을 제거하니 문제가 해결되는걸 발견했다. 그래서 원본 페이지에선 video에 주어진 어떤 속성이나 style이 문제를 해결해줬을거라고 생각했다.
+
+3. 원본 페이지의 요소를 구현하기 위해 youtube player api를 이용하려 했으나 가상 dom이 존재하고 window가 나중에 생성되는 react환경에서는 쓸 수 없었고, npm 사이트에서 찾아보니 react(next) 환경에서도 쓸 수 있도록 해주는 youtube-player 라이브러리를 발견했다. 그래서 적용시켜보려 했으나, headlessui가 갑자기 ssr 오류 문제를 메세지와 로그로 띄웠다.
 
 ## 해결
 
 1. headlessui의 popover는 독립적인 작동을 원칙으로 하기에 원하는 옵션이 존재하지 않았다. 결국 아예 popover의 open과 관련된 상태를 이용하지 않고, static 옵션을 주고 부모 요소에서 상태를 설정한 후, document.addEventListener에서 close 이벤트를 추가하고, button쪽은 addEventListener와 e.preventDefault와 e.stoppropagation()으로 전파를 막고 동작하게 해주고, pannel쪽도 같은 방법으로 막아줌으로써 해결했다. 차라리 다른 라이브러리나 처음부터 custom ui를 작성해야 했다.
 
-2. 원인을 찾아보다가, 클론코딩 중인 내 페이지에서 video 배경을 제거하니 문제가 해결되는걸 발견했다. 그래서 원본 페이지에선 video에 주어진 어떤 속성이나 style이 문제를 해결해줬을거라고 생각했고, 하나하나 원본페이지에서 지워나가다가 우연히 border-start-start-radius를 스타일을 제거해보니 내가 클론코딩하던 페이지와 동일한 문제가 발생하는걸 확인했다. 원인은 찾았지만, 도통 이유를 알 수 없었고 그 이유를 알아내기 위해 chatgpt에 질문했다. 내용이 꽤 길어져서 해설부분을 추가했다.
+2. 그래서 하나하나 원본페이지에서 지워나가다가 우연히 border-start-start-radius를 스타일을 제거해보니 내가 클론코딩하던 페이지와 동일한 문제가 발생하는걸 확인했다. 원인은 찾았지만, 도통 이유를 알 수 없었고 그 이유를 알아내기 위해 chatgpt에 질문했다. 내용이 꽤 길어져서 해설부분을 추가했다.
+
+3. headlessui와 youtube-plyaer가 충돌하는걸 확인했고 원인을 고민해봤다. 그리고 렌더링 타이밍이 어긋나기 때문에 ssr 오류 로그가 띄워진게 아닐까라는 추측을 내놨다. 그래서 그 추측을 기반으로 chatgpt에게 질문한 결과, 이유가 밝혀졌다. 결론은 headlessui는 portal 기능을 이용해 ssr과 csr을 동시에 수행중이지만, youtube-player는 csr 기능만 활용하기에 클라이언트 측 vdom이 수정이 됐지만 서버측 vdom은 수정되지 않아 둘이 같지 않아 문제가 터진것이였다. 그래서 dynamic import로 ssr을 비활성화한 결과, 문제가 해결됐다.
 
 ### chatgpt에 질문(해설)
 
@@ -184,3 +192,113 @@ border-radius를 주는 순간
 
 솔직히 말해요.
 이건 “와… 이건 알 필요 없는데 알게 된 지식” 영역입니다 😂
+
+3. 아 이 에러 로그 딱 보니까 원인 거의 확정이에요.
+   지금 상황 정리하면 👇
+
+🔥 문제의 핵심 (로그 해석)
+
+- <div data-headlessui-portal="">
+
+* <span hidden style="position:fixed; ...">
+
+👉 서버에서 렌더된 Headless UI 마크업이랑
+👉 클라이언트에서 처음 그린 마크업이 다름
+
+즉, Headless UI의 Portal 동작이 SSR/CSR에서 서로 다르게 나오고 있음 → hydration 실패 💥
+
+왜 Headless UI + YouTube Player에서 터지냐면
+1️⃣ Headless UI는 기본적으로 Portal 사용
+
+서버: portal target이 없음 → fallback <span hidden />
+
+클라이언트: document.body 생김 → <div data-headlessui-portal />
+
+➡️ HTML 구조가 달라짐 → hydration mismatch
+
+2️⃣ YouTube iframe은 무조건 client-only
+
+근데 지금 구조가:
+
+SSR 시에도 Dialog/Transition은 렌더됨
+
+iframe / player는 client에서만 생성됨
+
+➡️ Headless UI 내부 구조가 클라이언트에서 재조립됨
+
+✅ 가장 안전한 해결책 (강력 추천)
+✅ Headless UI Dialog를 완전 Client Only로 만들기
+Next.js 기준
+import dynamic from 'next/dynamic';
+
+const VideoDialog = dynamic(() => import('./VideoDialog'), {
+ssr: false,
+});
+
+Headless UI + youtube-player 같이 있으면
+SSR 포기하는 게 정신 건강에 좋음
+
+✅ 차선책 1: Portal 끄기 (가능한 경우)
+
+Dialog라면:
+
+<Dialog
+  open={open}
+  onClose={setOpen}
+  static
+  unmount={false}
+>
+
+그리고 Portal 비활성화
+
+<Dialog.Panel>
+
+⚠️ 단, Dialog는 내부적으로 Portal 강제하는 경우가 많아서
+완전히 안 없어질 수도 있음.
+
+✅ 차선책 2: hydration 이후에만 렌더
+const [mounted, setMounted] = useState(false);
+
+useEffect(() => {
+setMounted(true);
+}, []);
+
+if (!mounted) return null;
+
+➡️ 서버 & 첫 hydration 단계에서 아예 렌더 안 함
+➡️ 클라이언트에서만 Headless UI가 DOM 생성
+
+✅ 차선책 3: Dialog 대신 Portal 없는 컴포넌트
+
+영상 모달이면 사실:
+
+Dialog 필요 없음
+
+접근성 직접 관리 가능
+
+➡️ fixed inset-0 div + transition만 써도 됨
+
+🧠 정리 (이건 거의 공식 결론급)
+조합 결과
+Headless UI Dialog + SSR ❌ 자주 hydration 깨짐
+Headless UI + iframe ❌ portal 타이밍 충돌
+Headless UI + youtube-player ❌❌
+Client-only dynamic import ✅ 가장 안정
+내가 딱 집어서 고쳐줄 수 있는 정보
+
+이거 알려주면 최적 해법 바로 짜줄게요:
+
+Next.js App Router / Pages Router?
+
+사용 중인 컴포넌트
+
+Dialog
+
+Popover
+
+Menu
+
+영상 모달이 SEO 대상인가? (아니면 client-only OK?)
+
+지금 로그 기준으로 보면
+👉 **dynamic + ssr:false 한 방이면 끝날 확률 90%**입니다.

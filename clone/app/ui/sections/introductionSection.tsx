@@ -2,42 +2,15 @@ import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { PlayIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import { promises } from "dns";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import YoutubePlayer from "youtube-player";
 
-export const IntroductionSection = () => {
+export default () => {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
-  const [player, setPlayer] = useState<
-    | (object & {
-        playVideo: () => void;
-        pauseVideo: () => void;
-        loadVideoByUrl: (url: string) => void;
-        getIframe: () => Promise<HTMLIFrameElement>;
-      })
-    | null
-  >(null);
-  const youtubeRef = useRef<HTMLIFrameElement | null>(null);
 
-  useEffect(() => {
-    if (window && youtubeRef.current != null) {
-      const playerC = YoutubePlayer(youtubeRef.current);
-      playerC.loadVideoByUrl("https://www.youtube.com/embed/HubmluaaFmc");
-      setPlayer(playerC);
-      playerC.getPlaylist().then((v) => console.log(v));
-      return () => {
-        playerC.destroy();
-      };
-    }
-  }, [youtubeRef.current]);
-  useEffect(() => {
-    if (player !== null) {
-      if (openDialog) player.playVideo();
-      else player.pauseVideo();
-      player.getIframe().then((v) => console.log(v));
-    }
-  }, [openDialog]);
   return (
     <section className="bg-neutral-100">
       <div className="container max-w-[1200] py-12">
@@ -121,20 +94,7 @@ export const IntroductionSection = () => {
                       />
                     </button>
                   </DialogTitle>
-                  <div className="w-full h-full p-4">
-                    <iframe
-                      className="w-full h-full rounded-xl"
-                      width="1920"
-                      height="1080"
-                      src="https://www.youtube.com/embed/HubmluaaFmc"
-                      title="OpenAI turns shared knowledge into faster workflows"
-                      // frameborder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      // referrerpolicy="strict-origin-when-cross-origin"
-                      // allowfullscreen
-                      ref={youtubeRef}
-                    ></iframe>
-                  </div>
+                  <YoutubePannel openDialog={openDialog} />
                   <Link
                     className="text-blue-600 hover:text-blue-900 ml-4 group"
                     href={"/"}
@@ -150,5 +110,48 @@ export const IntroductionSection = () => {
         </div>
       </div>
     </section>
+  );
+};
+
+const YoutubePannel = ({ openDialog }: { openDialog: boolean }) => {
+  const [player, setPlayer] = useState<
+    | (object & {
+        playVideo: () => void;
+        pauseVideo: () => void;
+        loadVideoByUrl: (url: string) => void;
+        getIframe: () => Promise<HTMLIFrameElement>;
+      })
+    | null
+  >(null);
+  const youtubeRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (youtubeRef.current != null) {
+      if (player !== null) return;
+      const playerC = YoutubePlayer(youtubeRef.current, {
+        videoId: "HubmluaaFmc",
+        width: 1920,
+        height: 1080,
+        playerVars: {
+          autoplay: 0,
+          controls: 1,
+        },
+      });
+      // playerC.loadVideoById("HubmluaaFmc");
+      setPlayer(playerC);
+      return () => {
+        playerC.destroy();
+      };
+    }
+  }, []);
+  useEffect(() => {
+    if (player !== null) {
+      if (openDialog) player.playVideo();
+      else player.pauseVideo();
+    }
+  }, [openDialog]);
+  return (
+    <div className="w-full h-full p-4">
+      <div className="w-full h-full rounded-xl" ref={youtubeRef}></div>
+    </div>
   );
 };

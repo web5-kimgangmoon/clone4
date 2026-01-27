@@ -6,7 +6,7 @@
 
 # 스택
 
-next, framer-motion, embla Carousel, react, tailwind, github, @heroicons/react, headless ui, clsx, pretendard, youtube-player
+next, framer-motion, embla Carousel, react, tailwind, github, @heroicons/react, headless ui, clsx, pretendard, react-youtube
 
 # 기타
 
@@ -174,3 +174,11 @@ next, framer-motion, embla Carousel, react, tailwind, github, @heroicons/react, 
 ### 1/24
 
 1. 유튜브 라이브러리와 headlessui 충돌중인 것으로 보인다.
+
+### 1/26
+
+1. 유튜브 라이브러리와 headlessui 간 충돌해결했습니다.
+
+### 1/27
+
+1. 나중에 찾아보니, 리액트용 유튜브 플레이어 라이브러리인 react-youtube가 존재했습니다. 다음부터는 좀 더 꼼꼼히 조사해야겠습니다.

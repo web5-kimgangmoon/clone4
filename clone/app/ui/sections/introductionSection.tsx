@@ -1,12 +1,10 @@
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { PlayIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
-import { promises } from "dns";
-import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import YoutubePlayer from "youtube-player";
+import YouTube, { YouTubePlayer } from "react-youtube";
 
 export default () => {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
@@ -114,44 +112,21 @@ export default () => {
 };
 
 const YoutubePannel = ({ openDialog }: { openDialog: boolean }) => {
-  const [player, setPlayer] = useState<
-    | (object & {
-        playVideo: () => void;
-        pauseVideo: () => void;
-        loadVideoByUrl: (url: string) => void;
-        getIframe: () => Promise<HTMLIFrameElement>;
-      })
-    | null
-  >(null);
-  const youtubeRef = useRef<HTMLDivElement | null>(null);
+  const youtubeRef = useRef<YouTubePlayer | null>(null);
   useEffect(() => {
-    if (youtubeRef.current != null) {
-      if (player !== null) return;
-      const playerC = YoutubePlayer(youtubeRef.current, {
-        videoId: "HubmluaaFmc",
-        width: 1920,
-        height: 1080,
-        playerVars: {
-          autoplay: 0,
-          controls: 1,
-        },
-      });
-      // playerC.loadVideoById("HubmluaaFmc");
-      setPlayer(playerC);
-      return () => {
-        playerC.destroy();
-      };
-    }
-  }, []);
-  useEffect(() => {
-    if (player !== null) {
-      if (openDialog) player.playVideo();
-      else player.pauseVideo();
+    if (youtubeRef.current !== null) {
+      if (openDialog) youtubeRef.current.playVideo();
+      else youtubeRef.current.pauseVideo();
     }
   }, [openDialog]);
   return (
-    <div className="w-full h-full p-4">
-      <div className="w-full h-full rounded-xl" ref={youtubeRef}></div>
-    </div>
+    <YouTube
+      className="w-full h-full p-4"
+      iframeClassName="w-full h-full rounded-xl"
+      videoId="HubmluaaFmc"
+      onReady={(e) => {
+        youtubeRef.current = e.target;
+      }}
+    ></YouTube>
   );
 };

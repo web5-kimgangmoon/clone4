@@ -182,3 +182,7 @@ next, framer-motion, embla Carousel, react, tailwind, github, @heroicons/react, 
 ### 1/27
 
 1. 나중에 찾아보니, 리액트용 유튜브 플레이어 라이브러리인 react-youtube가 존재했습니다. 다음부터는 좀 더 꼼꼼히 조사해야겠습니다.
+
+### 1/28
+
+1. gird 재배치 및 li요소들 추가.

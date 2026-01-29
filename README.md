@@ -186,3 +186,11 @@ next, framer-motion, embla Carousel, react, tailwind, github, @heroicons/react, 
 ### 1/28
 
 1. gird 재배치 및 li요소들 추가.
+
+### 1/29
+
+1. 쉬었습니다. 죄송합니다.
+
+### 1/30~2/1
+
+1. 놀러갑니다.

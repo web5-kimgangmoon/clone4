@@ -194,3 +194,7 @@ next, framer-motion, embla Carousel, react, tailwind, github, @heroicons/react, 
 ### 1/30~2/1
 
 1. 놀러갑니다.
+
+### 2/3
+
+1. 슬라이드 작업중.

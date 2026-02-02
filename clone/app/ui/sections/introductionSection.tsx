@@ -1,10 +1,23 @@
+import { Briefcase } from "@/app/svgStore/briefcase";
+import { Globe } from "@/app/svgStore/globe";
+import { Heart } from "@/app/svgStore/heart";
+import { Rocket } from "@/app/svgStore/rocket";
+import { Star } from "@/app/svgStore/star";
+import { Trophy } from "@/app/svgStore/trophy";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
-import { PlayIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  PlayIcon,
+  RocketLaunchIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import YouTube, { YouTubePlayer } from "react-youtube";
+import { motion } from "framer-motion";
+import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
 
 export default () => {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
@@ -170,6 +183,7 @@ export default () => {
             </li>
           ))}
         </ul>
+        <SlidePannel />
       </div>
     </section>
   );
@@ -192,5 +206,57 @@ const YoutubePannel = ({ openDialog }: { openDialog: boolean }) => {
         youtubeRef.current = e.target;
       }}
     ></YouTube>
+  );
+};
+
+const SlidePannel = () => {
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { watchDrag: false, loop: true, duration: 1000 },
+    [Autoplay({ jump: false, delay: 1000 })]
+  );
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    // emblaApi.plugins().autoplay?.play();
+  }, [emblaApi]);
+
+  return (
+    <div className="-mx-6 w-full overflow-hidden" ref={emblaRef}>
+      <motion.ul
+        className="flex gap-8"
+        // onHoverStart={() => {
+        //   if (!emblaApi) return;
+        //   emblaApi?.plugins().autoplay?.stop();
+        // }}
+        // onHoverEnd={() => {
+        //   if (!emblaApi) return;
+        //   emblaApi?.plugins().autoplay?.play();
+        // }}
+      >
+        {[
+          { p: "1억 명 이상의 전 세계 사용자", img: Globe },
+          { p: "#3년 연속 지식 베이스 1위 (G2)", img: Trophy },
+          { p: "#AI 기업 통합 검색 1위 (G2)", img: Briefcase },
+          { p: "#AI 글쓰기 1위 (G2)", img: Star },
+          { p: "Fortune 100대 기업 중 62%가 사용", img: Rocket },
+          { p: "YC 기업의 50% 이상", img: Heart },
+          { p: "140만 명이 넘는 커뮤니티 멤버", img: Globe },
+          { p: "1억 명 이상의 전 세계 사용자", img: Globe },
+          { p: "#3년 연속 지식 베이스 1위 (G2)", img: Trophy },
+          { p: "#AI 기업 통합 검색 1위 (G2)", img: Briefcase },
+          { p: "#AI 글쓰기 1위 (G2)", img: Star },
+          { p: "Fortune 100대 기업 중 62%가 사용", img: Rocket },
+          { p: "YC 기업의 50% 이상", img: Heart },
+        ].map((v, idx) => (
+          <li
+            className="grow-0 shrink-0 basis-1 flex items-center gap-2"
+            key={idx}
+          >
+            <div className="w-4 aspect-square">{v.img()}</div>
+            <p className="text-nowrap">{v.p}</p>
+          </li>
+        ))}
+      </motion.ul>
+    </div>
   );
 };

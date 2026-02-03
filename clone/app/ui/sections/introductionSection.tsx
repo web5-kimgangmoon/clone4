@@ -15,7 +15,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import YouTube, { YouTubePlayer } from "react-youtube";
-import { motion } from "framer-motion";
+import {
+  motion,
+  useMotionValueEvent,
+  useTime,
+  useTransform,
+} from "framer-motion";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 
@@ -59,21 +64,23 @@ export default () => {
                 <span className="text-sm">→</span>
               </Link>
             </div>
-            <button
-              className="relative group cursor-pointer rounded-lg overflow-hidden"
-              onClick={() => setOpenDialog((v) => !v)}
-            >
-              <Image
-                className="group-hover:opacity-80 transition-opacity duration-200"
-                src={"/image.avif"}
-                alt="image.avif"
-                width={384}
-                height={232}
-              ></Image>
-              <span className="absolute bottom-3 right-3 w-9 p-[0.6rem] aspect-square rounded-full bg-white text-neutral-600">
-                <PlayIcon color="currentColor" fill="currentColor" />
-              </span>
-            </button>
+            <div className="flex items-center">
+              <button
+                className="relative aspect-[384/232] group cursor-pointer"
+                onClick={() => setOpenDialog((v) => !v)}
+              >
+                <Image
+                  className="group-hover:opacity-80 transition-opacity duration-200 rounded-lg"
+                  src={"/image.avif"}
+                  alt="image.avif"
+                  width={384}
+                  height={232}
+                ></Image>
+                <span className="absolute bottom-3 right-3 w-9 p-[0.6rem] aspect-square rounded-full bg-white text-neutral-600">
+                  <PlayIcon color="currentColor" fill="currentColor" />
+                </span>
+              </button>
+            </div>
             <Dialog
               onClose={() => setOpenDialog(false)}
               open={openDialog}
@@ -210,28 +217,33 @@ const YoutubePannel = ({ openDialog }: { openDialog: boolean }) => {
 };
 
 const SlidePannel = () => {
-  const [emblaRef, emblaApi] = useEmblaCarousel(
-    { watchDrag: false, loop: true, duration: 1000 },
-    [Autoplay({ jump: false, delay: 1000 })]
-  );
-
-  useEffect(() => {
-    if (!emblaApi) return;
-    // emblaApi.plugins().autoplay?.play();
-  }, [emblaApi]);
-
+  const [isPause, setIsPause] = useState(false);
+  const time = useTime();
+  const translateX = useTransform(time, [0, 4000], ["0%", "-50%"]);
+  useMotionValueEvent(translateX, "animationComplete", () => {
+    // console.log("dad");
+    // translateX.animation?.;
+    // translateX.animation?.play();
+  });
   return (
-    <div className="-mx-6 w-full overflow-hidden" ref={emblaRef}>
+    <motion.div
+      className="-mx-6 w-[calc(100%+3rem)] overflow-hidden"
+      onHoverStart={() => {
+        setIsPause(true);
+      }}
+      onHoverEnd={() => {
+        setIsPause(false);
+      }}
+    >
       <motion.ul
-        className="flex gap-8"
-        // onHoverStart={() => {
-        //   if (!emblaApi) return;
-        //   emblaApi?.plugins().autoplay?.stop();
-        // }}
-        // onHoverEnd={() => {
-        //   if (!emblaApi) return;
-        //   emblaApi?.plugins().autoplay?.play();
-        // }}
+        className="flex gap-x-8"
+        animate={
+          !isPause && {
+            transition: { duration: 4, ease: "linear", repeat: Infinity },
+            translateX: "-50%",
+          }
+        }
+        // style={{ translateX: translateX }}
       >
         {[
           { p: "1억 명 이상의 전 세계 사용자", img: Globe },
@@ -247,16 +259,18 @@ const SlidePannel = () => {
           { p: "#AI 글쓰기 1위 (G2)", img: Star },
           { p: "Fortune 100대 기업 중 62%가 사용", img: Rocket },
           { p: "YC 기업의 50% 이상", img: Heart },
+          { p: "140만 명이 넘는 커뮤니티 멤버", img: Globe },
         ].map((v, idx) => (
           <li
-            className="grow-0 shrink-0 basis-1 flex items-center gap-2"
+            className="flex grow-0 shrink-0 basis-1 items-center gap-2"
             key={idx}
+            style={{ gridRow: "auto", gridColumn: "auto" }}
           >
             <div className="w-4 aspect-square">{v.img()}</div>
             <p className="text-nowrap">{v.p}</p>
           </li>
         ))}
       </motion.ul>
-    </div>
+    </motion.div>
   );
 };

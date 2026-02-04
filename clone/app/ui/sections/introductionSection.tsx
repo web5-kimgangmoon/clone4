@@ -17,6 +17,8 @@ import { useEffect, useRef, useState } from "react";
 import YouTube, { YouTubePlayer } from "react-youtube";
 import {
   motion,
+  useAnimate,
+  useMotionValue,
   useMotionValueEvent,
   useTime,
   useTransform,
@@ -219,15 +221,22 @@ const YoutubePannel = ({ openDialog }: { openDialog: boolean }) => {
 const SlidePannel = () => {
   const [isPause, setIsPause] = useState(false);
   const time = useTime();
-  const translateX = useTransform(time, [0, 4000], ["0%", "-50%"]);
-  useMotionValueEvent(translateX, "animationComplete", () => {
-    // console.log("dad");
-    // translateX.animation?.;
-    // translateX.animation?.play();
+  const timing = useMotionValue(0);
+  const translateX = useTransform(timing, [0, 5000], ["0%", "-50%"]);
+  useMotionValueEvent(time, "change", () => {
+    if (timing.get() === 5000) timing.set(0);
+    else timing.set(timing.get() + 1);
+    console.log(timing.get());
   });
+
+  const viewrRef = useRef<null | HTMLUListElement>(null);
   return (
     <motion.div
-      className="-mx-6 w-[calc(100%+3rem)] overflow-hidden"
+      className="-mx-6 overflow-hidden mt-6"
+      style={{
+        maskImage:
+          "linear-gradient(to left, transparent, #000000 5%, #000000 95%, transparent)",
+      }}
       onHoverStart={() => {
         setIsPause(true);
       }}
@@ -236,14 +245,11 @@ const SlidePannel = () => {
       }}
     >
       <motion.ul
-        className="flex gap-x-8"
-        animate={
-          !isPause && {
-            transition: { duration: 4, ease: "linear", repeat: Infinity },
-            translateX: "-50%",
-          }
-        }
-        // style={{ translateX: translateX }}
+        className="flex w-max"
+        style={{ translateX: timing }}
+        transition={{ duration: 50, ease: "linear", repeat: Infinity }}
+        // style={{ translateX }}
+        ref={viewrRef}
       >
         {[
           { p: "1억 명 이상의 전 세계 사용자", img: Globe },
@@ -262,12 +268,14 @@ const SlidePannel = () => {
           { p: "140만 명이 넘는 커뮤니티 멤버", img: Globe },
         ].map((v, idx) => (
           <li
-            className="flex grow-0 shrink-0 basis-1 items-center gap-2"
+            className="flex grow-0 shrink-0 basis-1 items-center gap-2 mx-4 items-center"
             key={idx}
             style={{ gridRow: "auto", gridColumn: "auto" }}
           >
-            <div className="w-4 aspect-square">{v.img()}</div>
-            <p className="text-nowrap">{v.p}</p>
+            <div className="w-6 aspect-square text-neutral-400">{v.img()}</div>
+            <p className="text-nowrap text-sm font-semibold text-neutral-400 cursor-default">
+              {v.p}
+            </p>
           </li>
         ))}
       </motion.ul>

@@ -195,10 +195,14 @@ next, framer-motion, embla Carousel, react, tailwind, github, @heroicons/react, 
 
 1. 놀러갑니다.
 
-### 2/3
+### 2/2
 
 1. 슬라이드 작업중.
 
-### 2/4
+### 2/3
 
 1. 무한 슬라이드 작업중.
+
+### 2/4
+
+1. 무한 슬라이드 모양은 완료했지만, hover시 멈추도록 하는게 필요합니다.

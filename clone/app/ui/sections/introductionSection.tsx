@@ -16,6 +16,8 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import YouTube, { YouTubePlayer } from "react-youtube";
 import {
+  animate,
+  AnimationPlaybackControlsWithThen,
   motion,
   useAnimate,
   useMotionValue,
@@ -220,16 +222,23 @@ const YoutubePannel = ({ openDialog }: { openDialog: boolean }) => {
 
 const SlidePannel = () => {
   const [isPause, setIsPause] = useState(false);
-  const time = useTime();
-  const timing = useMotionValue(0);
-  const translateX = useTransform(timing, [0, 5000], ["0%", "-50%"]);
-  useMotionValueEvent(time, "change", () => {
-    if (timing.get() === 5000) timing.set(0);
-    else timing.set(timing.get() + 1);
-    console.log(timing.get());
-  });
+  const x = useMotionValue("0%");
+  const controls = useRef<AnimationPlaybackControlsWithThen | null>(null);
 
-  const viewrRef = useRef<null | HTMLUListElement>(null);
+  useEffect(() => {
+    controls.current = animate(x, "-50%", {
+      duration: 50,
+      repeat: Infinity,
+    });
+
+    return () => controls.current?.stop();
+  }, []);
+  useEffect(() => {
+    if (isPause) {
+      controls.current?.pause();
+    } else controls.current?.play();
+  }, [isPause]);
+
   return (
     <motion.div
       className="-mx-6 overflow-hidden mt-6"
@@ -244,13 +253,7 @@ const SlidePannel = () => {
         setIsPause(false);
       }}
     >
-      <motion.ul
-        className="flex w-max"
-        style={{ translateX: timing }}
-        transition={{ duration: 50, ease: "linear", repeat: Infinity }}
-        // style={{ translateX }}
-        ref={viewrRef}
-      >
+      <motion.ul className="flex w-max" style={{ x }}>
         {[
           { p: "1억 명 이상의 전 세계 사용자", img: Globe },
           { p: "#3년 연속 지식 베이스 1위 (G2)", img: Trophy },
@@ -270,7 +273,6 @@ const SlidePannel = () => {
           <li
             className="flex grow-0 shrink-0 basis-1 items-center gap-2 mx-4 items-center"
             key={idx}
-            style={{ gridRow: "auto", gridColumn: "auto" }}
           >
             <div className="w-6 aspect-square text-neutral-400">{v.img()}</div>
             <p className="text-nowrap text-sm font-semibold text-neutral-400 cursor-default">

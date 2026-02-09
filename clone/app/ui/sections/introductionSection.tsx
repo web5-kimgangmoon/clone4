@@ -5,11 +5,7 @@ import { Rocket } from "@/app/svgStore/rocket";
 import { Star } from "@/app/svgStore/star";
 import { Trophy } from "@/app/svgStore/trophy";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
-import {
-  PlayIcon,
-  RocketLaunchIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
+import { PlayIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
@@ -19,14 +15,8 @@ import {
   animate,
   AnimationPlaybackControlsWithThen,
   motion,
-  useAnimate,
   useMotionValue,
-  useMotionValueEvent,
-  useTime,
-  useTransform,
 } from "framer-motion";
-import useEmblaCarousel from "embla-carousel-react";
-import Autoplay from "embla-carousel-autoplay";
 
 export default () => {
   const [openDialog, setOpenDialog] = useState<boolean>(false);

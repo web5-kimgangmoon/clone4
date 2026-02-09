@@ -1,0 +1,14 @@
+export const Book = () => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 20 20"
+      className="w-full h-full"
+    >
+      <path
+        d="M16.875 5.625V17.5h-9.59c-.741 0-1.244-.21-1.77-.731l-1.659-1.66c-.525-.525-.731-1.028-.731-1.768V2.5H13.75v11.875H5.775l1.25 1.25H15v-10z"
+        fill="currentColor"
+      ></path>
+    </svg>
+  );
+};

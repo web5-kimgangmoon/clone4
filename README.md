@@ -214,3 +214,7 @@ next, framer-motion, embla Carousel, react, tailwind, github, @heroicons/react, 
 ### 2/7
 
 1. 슬라이드 애니메이션 완성.
+
+### 2/9~2/10
+
+1. 쉬었습니다. 죄송합니다.

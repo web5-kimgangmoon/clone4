@@ -44,32 +44,36 @@ export const WorkingSection = () => {
           {[
             {
               href: "/",
-              content: "브레인스토밍에서 로드맵까지 한 번에→",
+              content: "브레인스토밍에서 로드맵까지 한 번에",
               icon: <QuestionCircle />,
             },
             {
               href: "/",
-              content: "회의 기록을 SNS 콘텐츠로→",
+              content: "회의 기록을 SNS 콘텐츠로",
               icon: <ThreeDot />,
             },
-            { href: "/", content: "워크스페이스 정리→", icon: <Book /> },
-            { href: "/", content: "신입직원 온보딩→", icon: <Person /> },
-            { href: "/", content: "랜딩 페이지 다듬기→", icon: <Globe /> },
-            { href: "/", content: "워크샵 계획→", icon: <Map /> },
-            { href: "/", content: "맛집 트래커→", icon: <Tableware /> },
+            { href: "/", content: "워크스페이스 정리", icon: <Book /> },
+            { href: "/", content: "신입직원 온보딩", icon: <Person /> },
+            { href: "/", content: "랜딩 페이지 다듬기", icon: <Globe /> },
+            { href: "/", content: "워크샵 계획", icon: <Map /> },
+            { href: "/", content: "맛집 트래커", icon: <Tableware /> },
             {
               href: "/",
-              content: "메모를 바로 실행 가능한 작업으로→",
+              content: "메모를 바로 실행 가능한 작업으로",
               icon: <Target />,
             },
           ].map((v, idx) => (
             <li className="" key={idx}>
               <Link
-                className="h-full flex flex-col justify-between gap-y-4 px-5 py-3 border border-neutral-300 rounded-lg"
+                className="h-full flex flex-col justify-between gap-y-4 px-5 py-3 border border-neutral-300 rounded-lg hover:shadow-btn transition-shadow duration-200"
                 href={v.href}
               >
-                <span className="block w-6 aspect-square"> {v.icon}</span>
-                <p className="break-keep text-balance">{v.content}</p>
+                <span className="block w-6 aspect-square text-neutral-400">
+                  {v.icon}
+                </span>
+                <p className="break-keep text-balance">
+                  <span className="font-bold">{v.content}</span>→
+                </p>
               </Link>
             </li>
           ))}

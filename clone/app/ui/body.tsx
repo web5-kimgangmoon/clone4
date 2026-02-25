@@ -8,6 +8,7 @@ import { RequestSection } from "./sections/requestSection";
 // import { IntroductionSection } from "./sections/introductionSection";
 import dynamic from "next/dynamic";
 import { WorkingSection } from "./sections/workingSection";
+import { DownloadSection } from "./sections/downloadSection";
 
 const IntroductionSectionNoSSR = dynamic(
   () => import("./sections/introductionSection"),
@@ -22,6 +23,7 @@ export const Body = () => {
       <RequestSection />
       <IntroductionSectionNoSSR />
       <WorkingSection />
+      <DownloadSection />
     </main>
   );
 };

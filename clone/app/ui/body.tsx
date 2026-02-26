@@ -17,7 +17,7 @@ const IntroductionSectionNoSSR = dynamic(
 
 export const Body = () => {
   return (
-    <main className="pt-[50px]">
+    <main className="pt-[80px]">
       <Header />
       <ExampleSection />
       <RequestSection />

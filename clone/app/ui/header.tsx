@@ -14,9 +14,9 @@ import Image from "next/image";
 
 export const Header = () => {
   return (
-    <header className="fixed top-0 left-0 w-full z-11 bg-white px-6.5 pt-5.5 flex justify-between h-[50px]">
+    <header className="fixed top-0 left-0 w-full z-11 bg-white px-6.5 pt-5.5 pb-5.5 flex justify-between h-[80px]">
       <div className="grow-0 shrink-1 w-1/3">
-        <Link href={"/"}>
+        <Link href={"/"} className="block w-[29px] h-[30px]">
           <Logo />
         </Link>
       </div>
@@ -57,7 +57,7 @@ const Nav = () => {
     <nav className="grow-0 shrink-0 min-w-1/3">
       <PopoverGroup
         className={
-          "flex gap-1 text-[0.85rem] font-(family-name:--font-sansation) font-[500]"
+          "flex h-full gap-1 text-[0.85rem] font-(family-name:--font-sansation) font-[500]"
         }
       >
         <PopoverWrapper

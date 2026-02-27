@@ -242,3 +242,7 @@ next, framer-motion, embla Carousel, react, tailwind, github, @heroicons/react, 
 ### 2/26
 
 1. downloadSection 작업중.
+
+### 2/27
+
+1. downloadSection 완성.

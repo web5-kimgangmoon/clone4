@@ -1,18 +1,68 @@
 import clsx from "clsx";
 import Link from "next/link";
+import { InstagramIcon } from "../svgStore/instagramIcon";
+import { XIcon } from "../svgStore/XIcon";
+import { InIcon } from "../svgStore/inIcon";
+import { FacebookIcon } from "../svgStore/facebookIcon";
+import { YoutubeIcon } from "../svgStore/youtubeIcon";
 
 export const Footer = () => {
   return (
     <footer className="bg-white">
-      <div className="container max-w-[1200] py-12">
+      <div className="container max-w-[1200] py-16">
         <div className="flex justify-between">
-          <div className="w-[105] h-[30]">
-            <Logo />
+          <div className="flex flex-col justify-between h-full">
+            <div>
+              <div className="aspect-7/2 w-38">
+                <Logo />
+              </div>
+              <div className="flex gap-1 pt-8 text-neutral-600">
+                <IconLink className="hover:text-black">
+                  <InstagramIcon />
+                </IconLink>
+                <IconLink className="hover:text-black">
+                  <XIcon />
+                </IconLink>
+                <IconLink className="hover:text-blue-600">
+                  <InIcon />
+                </IconLink>
+                <IconLink className="hover:text-blue-600">
+                  <FacebookIcon />
+                </IconLink>
+                <IconLink className="hover:text-red-600">
+                  <YoutubeIcon />
+                </IconLink>
+              </div>
+            </div>
+            <div className="">
+              <button className="block">쿠키 설정</button>
+              <span>© 2026 Notion Labs, Inc.</span>
+            </div>
           </div>
           <FooterNav />
         </div>
       </div>
     </footer>
+  );
+};
+
+const IconLink = ({
+  children,
+  className,
+}: {
+  children: React.ReactElement;
+  className?: string;
+}) => {
+  return (
+    <Link
+      className={clsx(
+        "block hover:bg-neutral-200 transition duration-200 p-1.5 rounded-md active:bg-neutral-300",
+        className,
+      )}
+      href={"/"}
+    >
+      {children}
+    </Link>
   );
 };
 
@@ -104,13 +154,14 @@ const FooterNav = () => {
         },
       ].map((v, idx) => (
         <section key={idx}>
-          <ul className="h-full flex flex-col gap-1 pt-1">
+          <ul className="h-full flex flex-col gap-1 pt-1 pb-12">
             <li className="font-bold">{v.title}</li>
             {v.content.map((v, idx) => (
               <li
                 className={clsx(
-                  "text-sm text-neutral-700",
-                  v.isfittingBottom && "flex items-end min-h-max  ",
+                  v.isfittingBottom
+                    ? "flex items-end h-full font-bold"
+                    : "text-sm text-neutral-700",
                 )}
                 key={idx}
               >

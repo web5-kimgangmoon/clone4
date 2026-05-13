@@ -14,22 +14,22 @@ import Image from "next/image";
 
 export const Header = () => {
   return (
-    <header className="relative z-11 bg-white px-6.5 pt-5.5 flex justify-between">
+    <header className="fixed top-0 left-0 w-full z-11 bg-white px-6.5 pt-5.5 pb-5.5 flex justify-between h-[80px]">
       <div className="grow-0 shrink-1 w-1/3">
-        <Link href={"/"}>
+        <Link href={"/"} className="block w-[29px] h-[30px]">
           <Logo />
         </Link>
       </div>
       <Nav />
       <div className="flex gap-4 grow-0 shrink-1 w-1/3 justify-end">
         <Link
-          className="flex items-center px-3 py-1 bg-white hover:bg-neutral-100 rounded-md transition-colors duration-200 text-[0.85rem] font-[--font-sansation] font-[500]"
+          className="flex items-center px-3 py-1 bg-white hover:bg-neutral-100 rounded-md transition-colors duration-200 text-[0.85rem] font-(family-name:--font-sansation) font-[500]"
           href={"/"}
         >
           로그인
         </Link>
         <Link
-          className="flex items-center px-4 py-2 text-white bg-blue-500 hover:bg-blue-500/90 rounded-md transition-colors duration-100 text-[0.85rem] font-[--font-sansation] font-[500]"
+          className="flex items-center px-4 py-2 text-white bg-blue-500 hover:bg-blue-500/90 rounded-md transition-colors duration-100 text-[0.85rem] font-(family-name:--font-sansation) font-[500]"
           href={"/"}
         >
           Notion 무료로 사용하기
@@ -57,7 +57,7 @@ const Nav = () => {
     <nav className="grow-0 shrink-0 min-w-1/3">
       <PopoverGroup
         className={
-          "flex gap-1 text-[0.85rem] font-[--font-sansation] font-[500]"
+          "flex h-full gap-1 text-[0.85rem] font-(family-name:--font-sansation) font-[500]"
         }
       >
         <PopoverWrapper
@@ -293,7 +293,7 @@ const NotionComp = () => {
           ))}
         </ul>
       </nav>
-      <div className="flex-1/4 grow-0 shrink-0 rounded-xl font-[--font-sansation] font-semibold pr-32 text-neutral-600">
+      <div className="flex-1/4 grow-0 shrink-0 rounded-xl font-(family-name:--font-sansation) font-semibold pr-32 text-neutral-600">
         <div className="flex flex-col w-full h-full p-5 bg-neutral-100 rounded-xl">
           <h4 className="pb-4">
             더 빠른 경험을 위한 Notion 데스크톱 앱 다운로드

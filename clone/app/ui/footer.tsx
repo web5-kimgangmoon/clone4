@@ -11,7 +11,7 @@ export const Footer = () => {
     <footer className="bg-white">
       <div className="container max-w-[1200] py-16">
         <div className="flex justify-between">
-          <div className="flex flex-col justify-between h-full">
+          <div className="flex flex-col justify-between">
             <div>
               <div className="aspect-7/2 w-38">
                 <Logo />
@@ -34,9 +34,9 @@ export const Footer = () => {
                 </IconLink>
               </div>
             </div>
-            <div className="">
-              <button className="block">쿠키 설정</button>
-              <span>© 2026 Notion Labs, Inc.</span>
+            <div className="text-sm text-neutral-500">
+              <button className="block cursor-pointer">쿠키 설정</button>
+              <span className="block pt-3">© 2026 Notion Labs, Inc.</span>
             </div>
           </div>
           <FooterNav />
